@@ -18,33 +18,7 @@
     <item row="0" column="0">
      <layout class="QGridLayout" name="gridLayout_2">
       <item row="3" column="1">
-       <widget class="QComboBox" name="button_right">
-        <item>
-         <property name="text">
-          <string>a</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>b</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>c</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>d</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>e</string>
-         </property>
-        </item>
-       </widget>
+       <widget class="QComboBox" name="button_right"/>
       </item>
       <item row="2" column="0">
        <widget class="QLabel" name="label_3">
@@ -54,62 +28,10 @@
        </widget>
       </item>
       <item row="4" column="1">
-       <widget class="QComboBox" name="button_down">
-        <item>
-         <property name="text">
-          <string>a</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>b</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>c</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>d</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>e</string>
-         </property>
-        </item>
-       </widget>
+       <widget class="QComboBox" name="button_down"/>
       </item>
       <item row="2" column="1">
-       <widget class="QComboBox" name="button_left">
-        <item>
-         <property name="text">
-          <string>a</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>b</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>c</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>d</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>e</string>
-         </property>
-        </item>
-       </widget>
+       <widget class="QComboBox" name="button_left"/>
       </item>
       <item row="4" column="0">
        <widget class="QLabel" name="label_2">
@@ -140,33 +62,7 @@
        </widget>
       </item>
       <item row="1" column="1">
-       <widget class="QComboBox" name="button_up">
-        <item>
-         <property name="text">
-          <string>a</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>b</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>c</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>d</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>e</string>
-         </property>
-        </item>
-       </widget>
+       <widget class="QComboBox" name="button_up"/>
       </item>
       <item row="0" column="0">
        <widget class="QLabel" name="label_5">
@@ -176,33 +72,7 @@
        </widget>
       </item>
       <item row="0" column="1">
-       <widget class="QComboBox" name="button_analogic">
-        <item>
-         <property name="text">
-          <string>a</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>b</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>c</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>d</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>e</string>
-         </property>
-        </item>
-       </widget>
+       <widget class="QComboBox" name="button_analogic"/>
       </item>
      </layout>
     </item>

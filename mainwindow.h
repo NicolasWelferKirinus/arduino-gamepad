@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include "Qtcontroller.h"
+#include <QString>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -15,6 +16,9 @@ class MainWindow : public QMainWindow
 public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
+
+    QStringList combooptions();
+    char formatbuttons(QString button);
 
 private slots:
     void on_apply_clicked();

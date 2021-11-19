@@ -15,21 +15,48 @@ public:
 
     }
 
+    void button_press(int button_value){
+      switch(button_value){
+        case 101:
+          Mouse.press(MOUSE_LEFT);
+          break;
+        case 102:
+          Mouse.press(MOUSE_MIDDLE);
+          break;
+        case 103:
+          Mouse.press(MOUSE_RIGHT);
+          break;
+        default:
+          Keyboard.press(button_value);
+          break;
+        }
+      }
+
+    void button_release(int button_value){
+      switch(button_value){
+        case 101:
+          Mouse.release(MOUSE_LEFT);
+          break;
+        case 102:
+          Mouse.release(MOUSE_MIDDLE);
+          break;
+        case 103:
+          Mouse.release(MOUSE_RIGHT);
+          break;
+        default:
+          Keyboard.release(button_value);
+          break;
+        }
+      }
+
     void button_action(int pressed, int button_value)
     {
-        if (button_value == 128) {
             if (pressed == 0) {                          
-                Mouse.press();                             
+                button_press(button_value);                             
             } else {
-                Mouse.release();                          
+                button_release(button_value);                          
             }
-        } else {
-            if (pressed == 0) {                           
-                Keyboard.press(button_value);                     
-            } else {
-                Keyboard.release(button_value); 
-            }
-        }
+        
     }
 
     void check(){
@@ -41,9 +68,9 @@ public:
          }
           pressed[0] = Esplora.readJoystickSwitch();
           pressed[1] = Esplora.readButton(SWITCH_UP);
-          pressed[2] = Esplora.readButton(SWITCH_RIGHT);
-          pressed[3] = Esplora.readButton(SWITCH_DOWN);
-          pressed[4] = Esplora.readButton(SWITCH_LEFT);
+          pressed[2] = Esplora.readButton(SWITCH_LEFT);
+          pressed[3] = Esplora.readButton(SWITCH_RIGHT);
+          pressed[4] = Esplora.readButton(SWITCH_DOWN);
 
           for (int i = 0; i < 5; i++) {
             if (pressed[i] != comp[i]) {
