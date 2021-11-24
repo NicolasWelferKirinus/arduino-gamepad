@@ -14,11 +14,5 @@ void setup()
 
 void loop()
 {
-  int xValue = Esplora.readJoystickX();
-  int yValue = Esplora.readJoystickY();
-  int mouseX = map(xValue, -512, 512, 10, -10);  
-  int mouseY = map(yValue, -512, 512, -10, 10);  
-  Mouse.move(mouseX, mouseY, 0);                
-
   gamepad.check();
 }

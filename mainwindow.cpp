@@ -15,7 +15,9 @@ return QStringList() << "a" << "b" << "c" << "d" << "e"
                      << "6" << "7" << "8" << "9" << "0"
                      << "\\" << "/" << ";" << "[" << "]"
                      << "'" << "-" << "=" << "*" << "+" << "," << "."
-                     << "mouse left" << "mouse middle" << "mouse right"
+                     << "mouse left click" << "mouse middle click" << "mouse right click"
+                     << "move mouse up" << "move mouse left" << "move mouse right" << "move mouse down"
+                     << "scroll up" << "scroll down"
                      << "arrow up" << "arrow left" << "arrow right" << "arrow down"
                      << "backspace" << "tab" << "esc" << "insert" << "delete"
                      << "page up" << "page down" << "home" << "end" << "capslock"
@@ -34,6 +36,11 @@ MainWindow::MainWindow(QWidget *parent)
     ui->button_left->addItems(combooptions());
     ui->button_right->addItems(combooptions());
     ui->button_down->addItems(combooptions());
+    ui->joystick_up->addItems(combooptions());
+    ui->joystick_left->addItems(combooptions());
+    ui->joystick_right->addItems(combooptions());
+    ui->joystick_down->addItems(combooptions());
+    on_joystic_mode_currentIndexChanged(ui->joystic_mode->currentText());
 }
 
 MainWindow::~MainWindow()
@@ -48,12 +55,28 @@ constexpr unsigned int str2int(const char* str, int h = 0)
 
 char MainWindow::formatbuttons(QString button){
     std::string str =  button.toStdString();
-    if (str == "mouse left")
+    if (str == "mouse movement")
         return 101;
-    if (str == "mouse middle")
+    if (str == "buttons")
         return 102;
-    if (str == "mouse right")
-        return 103;
+    if (str == "mouse left click")
+        return 104;
+    if (str == "mouse middle click")
+        return 105;
+    if (str == "mouse right click")
+        return 106;
+    if (str == "move mouse up")
+        return 107;
+    if (str == "move mouse left")
+        return 108;
+    if (str == "move mouse right")
+        return 109;
+    if (str == "move mouse down")
+        return 110;
+    if (str == "scroll up")
+        return 111;
+    if (str == "scroll down")
+        return 112;
     if (str == "ctrl")
         return 128;
     if (str == "shift")
@@ -125,7 +148,27 @@ void MainWindow::on_apply_clicked()
     str += formatbuttons(ui->button_left->currentText());
     str += formatbuttons(ui->button_right->currentText());
     str += formatbuttons(ui->button_down->currentText());
+    str += formatbuttons(ui->joystic_mode->currentText());
+    str += formatbuttons(ui->joystick_up->currentText());
+    str += formatbuttons(ui->joystick_left->currentText());
+    str += formatbuttons(ui->joystick_right->currentText());
+    str += formatbuttons(ui->joystick_down->currentText());
     gamepad.apply(str);
     gamepad.send();
 }
 
+
+void MainWindow::on_joystic_mode_currentIndexChanged(const QString &arg1)
+{
+    if(arg1 == "mouse movement"){
+        ui->joystick_up->setDisabled(true);
+        ui->joystick_left->setDisabled(true);
+        ui->joystick_right->setDisabled(true);
+        ui->joystick_down->setDisabled(true);
+    }else{
+        ui->joystick_up->setDisabled(false);
+        ui->joystick_left->setDisabled(false);
+        ui->joystick_right->setDisabled(false);
+        ui->joystick_down->setDisabled(false);
+    }
+}

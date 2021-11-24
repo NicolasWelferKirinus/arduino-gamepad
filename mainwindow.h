@@ -23,6 +23,8 @@ public:
 private slots:
     void on_apply_clicked();
 
+    void on_joystic_mode_currentIndexChanged(const QString &arg1);
+
 private:
     Ui::MainWindow *ui;
     Qtcontroller gamepad;

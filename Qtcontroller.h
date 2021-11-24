@@ -10,17 +10,17 @@
 class Qtcontroller
 {
 private:
-    char button[5];
+    char button[10];
 public:
 
-    Qtcontroller(): button{0, 0, 0, 0, 0}
+    Qtcontroller(): button{0, 0, 0, 0, 0, 0, 0, 0, 0, 0}
     {
 
     }
 
 
     void apply(std::string str){
-        for (int i = 0; i < 5; ++i) {
+        for (int i = 0; i < 10; ++i) {
             button[i] = str[i];
         }
     }
@@ -34,7 +34,7 @@ public:
 
             if(serial.open(QIODevice::ReadWrite)){
                 serial.write( button);
-                serial.waitForBytesWritten(5);
+                serial.waitForBytesWritten(10);
             }
              }
 
