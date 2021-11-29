@@ -13,8 +13,6 @@ return QStringList() << "a" << "b" << "c" << "d" << "e"
                      << "z" << "space" << "ctrl" << "shift" << "alt"
                      << "1" << "2" << "3" << "4" << "5"
                      << "6" << "7" << "8" << "9" << "0"
-                     << "\\" << "/" << ";" << "[" << "]"
-                     << "'" << "-" << "=" << "*" << "+" << "," << "."
                      << "mouse left click" << "mouse middle click" << "mouse right click"
                      << "move mouse up" << "move mouse left" << "move mouse right" << "move mouse down"
                      << "scroll up" << "scroll down"
@@ -22,7 +20,13 @@ return QStringList() << "a" << "b" << "c" << "d" << "e"
                      << "backspace" << "tab" << "esc" << "insert" << "delete"
                      << "page up" << "page down" << "home" << "end" << "capslock"
                      << "F1" << "F2" << "F3" << "F4" << "F5" << "F6"
-                     << "F7" << "F8" << "F9" << "F10" << "F11" << "F12";
+                     << "F7" << "F8" << "F9" << "F10" << "F11" << "F12"
+                     << "Xinput y" << "Xinput x" << "Xinput b" << "Xinput a"
+                     << "Xinput lt" << "Xinput rt" << "Xinput lb" << "Xinput rb"
+                     << "Xinput d-pad up" << "Xinput d-pad left" << "Xinput d-pad right" << "Xinput d-pad down"
+                     << "Xinput back" << "Xinput logo" << "Xinput start" << "Xinput l3" << "Xinput r3"
+                     << "Xinput left joystick up" << "Xinput left joystick left" << "Xinput left joystick right" << "Xinput left joystick down"
+                     << "Xinput right joystick up" << "Xinput right joystick left" << "Xinput right joystick right" << "Xinput right joystick down";
 }
 
 MainWindow::MainWindow(QWidget *parent)
@@ -59,6 +63,30 @@ char MainWindow::formatbuttons(QString button){
         return 101;
     if (str == "buttons")
         return 102;
+    if (str == "Xinput left joystick")
+        return 220;
+    if (str == "Xinput right joystick")
+        return 221;
+    if (str == "Xinput l3")
+        return 222;
+    if (str == "Xinput r3")
+        return 223;
+    if (str == "Xinput left joystick up")
+        return 224;
+    if (str == "Xinput left joystick left")
+        return 225;
+    if (str == "Xinput left joystick right")
+        return 226;
+    if (str == "Xinput left joystick down")
+        return 227;
+    if (str == "Xinput right joystick up")
+        return 228;
+    if (str == "Xinput right joystick left")
+        return 229;
+    if (str == "Xinput right joystick right")
+        return 230;
+    if (str == "Xinput right joystick down")
+        return 231;
     if (str == "mouse left click")
         return 104;
     if (str == "mouse middle click")
@@ -77,6 +105,36 @@ char MainWindow::formatbuttons(QString button){
         return 111;
     if (str == "scroll down")
         return 112;
+    if (str == "Xinput y")
+        return 113;
+    if (str == "Xinput x")
+        return 114;
+    if (str == "Xinput b")
+        return 115;
+    if (str == "Xinput a")
+        return 116;
+    if (str == "Xinput lt")
+        return 117;
+    if (str == "Xinput rt")
+        return 118;
+    if (str == "Xinput lb")
+        return 119;
+    if (str == "Xinput rb")
+        return 120;
+    if (str == "Xinput d-pad up")
+        return 121;
+    if (str == "Xinput d-pad left")
+        return 122;
+    if (str == "Xinput d-pad right")
+        return 123;
+    if (str == "Xinput d-pad down")
+        return 124;
+    if (str == "Xinput back")
+        return 125;
+    if (str == "Xinput logo")
+        return 126;
+    if (str == "Xinput start")
+        return 127;
     if (str == "ctrl")
         return 128;
     if (str == "shift")
@@ -133,7 +191,7 @@ char MainWindow::formatbuttons(QString button){
         return 203;
     if (str == "F11")
         return 204;
-    if (str == "F11")
+    if (str == "F12")
         return 205;
     if (str == "space")
         return 32;
@@ -160,15 +218,15 @@ void MainWindow::on_apply_clicked()
 
 void MainWindow::on_joystic_mode_currentIndexChanged(const QString &arg1)
 {
-    if(arg1 == "mouse movement"){
-        ui->joystick_up->setDisabled(true);
-        ui->joystick_left->setDisabled(true);
-        ui->joystick_right->setDisabled(true);
-        ui->joystick_down->setDisabled(true);
-    }else{
+    if(arg1 == "buttons"){
         ui->joystick_up->setDisabled(false);
         ui->joystick_left->setDisabled(false);
         ui->joystick_right->setDisabled(false);
         ui->joystick_down->setDisabled(false);
+    }else{
+        ui->joystick_up->setDisabled(true);
+        ui->joystick_left->setDisabled(true);
+        ui->joystick_right->setDisabled(true);
+        ui->joystick_down->setDisabled(true);
     }
 }
