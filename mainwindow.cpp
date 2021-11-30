@@ -17,7 +17,7 @@ return QStringList() << "a" << "b" << "c" << "d" << "e"
                      << "move mouse up" << "move mouse left" << "move mouse right" << "move mouse down"
                      << "scroll up" << "scroll down"
                      << "arrow up" << "arrow left" << "arrow right" << "arrow down"
-                     << "backspace" << "tab" << "esc" << "insert" << "delete"
+                     << "enter" << "backspace" << "tab" << "esc" << "insert" << "delete"
                      << "page up" << "page down" << "home" << "end" << "capslock"
                      << "F1" << "F2" << "F3" << "F4" << "F5" << "F6"
                      << "F7" << "F8" << "F9" << "F10" << "F11" << "F12"
@@ -59,10 +59,12 @@ constexpr unsigned int str2int(const char* str, int h = 0)
 
 char MainWindow::formatbuttons(QString button){
     std::string str =  button.toStdString();
+    if (str == "enter")
+        return 176;
     if (str == "mouse movement")
-        return 101;
+        return 65;
     if (str == "buttons")
-        return 102;
+        return 66;
     if (str == "Xinput left joystick")
         return 220;
     if (str == "Xinput right joystick")
@@ -88,53 +90,53 @@ char MainWindow::formatbuttons(QString button){
     if (str == "Xinput right joystick down")
         return 231;
     if (str == "mouse left click")
-        return 104;
+        return 67;
     if (str == "mouse middle click")
-        return 105;
+        return 68;
     if (str == "mouse right click")
-        return 106;
+        return 69;
     if (str == "move mouse up")
-        return 107;
+        return 70;
     if (str == "move mouse left")
-        return 108;
+        return 71;
     if (str == "move mouse right")
-        return 109;
+        return 72;
     if (str == "move mouse down")
-        return 110;
+        return 73;
     if (str == "scroll up")
-        return 111;
+        return 74;
     if (str == "scroll down")
-        return 112;
+        return 75;
     if (str == "Xinput y")
-        return 113;
+        return 76;
     if (str == "Xinput x")
-        return 114;
+        return 77;
     if (str == "Xinput b")
-        return 115;
+        return 78;
     if (str == "Xinput a")
-        return 116;
+        return 79;
     if (str == "Xinput lt")
-        return 117;
+        return 80;
     if (str == "Xinput rt")
-        return 118;
+        return 81;
     if (str == "Xinput lb")
-        return 119;
+        return 82;
     if (str == "Xinput rb")
-        return 120;
+        return 83;
     if (str == "Xinput d-pad up")
-        return 121;
+        return 84;
     if (str == "Xinput d-pad left")
-        return 122;
+        return 85;
     if (str == "Xinput d-pad right")
-        return 123;
+        return 86;
     if (str == "Xinput d-pad down")
-        return 124;
+        return 87;
     if (str == "Xinput back")
-        return 125;
+        return 88;
     if (str == "Xinput logo")
-        return 126;
+        return 89;
     if (str == "Xinput start")
-        return 127;
+        return 90;
     if (str == "ctrl")
         return 128;
     if (str == "shift")
