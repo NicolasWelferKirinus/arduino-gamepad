@@ -238,8 +238,68 @@
      <height>22</height>
     </rect>
    </property>
+   <widget class="QMenu" name="menufile">
+    <property name="title">
+     <string>file</string>
+    </property>
+    <addaction name="actionOpen"/>
+    <addaction name="actionSave"/>
+    <addaction name="actionSave_as"/>
+   </widget>
+   <addaction name="menufile"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
+  <action name="actionOpen">
+   <property name="icon">
+    <iconset theme="document-open">
+     <normaloff>.</normaloff>.</iconset>
+   </property>
+   <property name="text">
+    <string>Open...</string>
+   </property>
+   <property name="toolTip">
+    <string>Open  a file</string>
+   </property>
+   <property name="statusTip">
+    <string>Open  a file</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+O</string>
+   </property>
+  </action>
+  <action name="actionSave">
+   <property name="icon">
+    <iconset theme="document-save">
+     <normaloff>.</normaloff>.</iconset>
+   </property>
+   <property name="text">
+    <string>Save</string>
+   </property>
+   <property name="toolTip">
+    <string>Save the current file</string>
+   </property>
+   <property name="statusTip">
+    <string>Save the current file</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+S</string>
+   </property>
+  </action>
+  <action name="actionSave_as">
+   <property name="icon">
+    <iconset theme="document-save-as">
+     <normaloff>.</normaloff>.</iconset>
+   </property>
+   <property name="text">
+    <string>Save as...</string>
+   </property>
+   <property name="toolTip">
+    <string>Save as</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Shift+S</string>
+   </property>
+  </action>
  </widget>
  <resources/>
  <connections/>

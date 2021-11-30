@@ -2,6 +2,9 @@
 #include "ui_mainwindow.h"
 #include <QString>
 #include <QTextStream>
+#include <QFileDialog>
+#include <QFile>
+#include <QSettings>
 
 QStringList MainWindow::combooptions(){
 
@@ -35,6 +38,7 @@ MainWindow::MainWindow(QWidget *parent)
     , gamepad()
 {
     ui->setupUi(this);
+    currentFileName = "";
     ui->button_analogic->addItems(combooptions());
     ui->button_up->addItems(combooptions());
     ui->button_left->addItems(combooptions());
@@ -44,6 +48,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->joystick_left->addItems(combooptions());
     ui->joystick_right->addItems(combooptions());
     ui->joystick_down->addItems(combooptions());
+    readsettings();
     on_joystic_mode_currentIndexChanged(ui->joystic_mode->currentText());
 }
 
@@ -200,9 +205,9 @@ char MainWindow::formatbuttons(QString button){
     return str[0];
 }
 
-void MainWindow::on_apply_clicked()
-{
+std::string MainWindow::get_combo(bool serial){
     std::string str = "";
+    if(serial){
     str += formatbuttons(ui->button_analogic->currentText());
     str += formatbuttons(ui->button_up->currentText());
     str += formatbuttons(ui->button_left->currentText());
@@ -213,8 +218,28 @@ void MainWindow::on_apply_clicked()
     str += formatbuttons(ui->joystick_left->currentText());
     str += formatbuttons(ui->joystick_right->currentText());
     str += formatbuttons(ui->joystick_down->currentText());
+    }else{
+        str += "arduinocontroller/";
+        str += ui->button_analogic->currentText().toStdString() + '/';
+        str += ui->button_up->currentText().toStdString() + '/';
+        str += ui->button_left->currentText().toStdString() + '/';
+        str += ui->button_right->currentText().toStdString() + '/';
+        str += ui->button_down->currentText().toStdString() + '/';
+        str += ui->joystic_mode->currentText().toStdString() + '/';
+        str += ui->joystick_up->currentText().toStdString() + '/';
+        str += ui->joystick_left->currentText().toStdString() + '/';
+        str += ui->joystick_right->currentText().toStdString() + '/';
+        str += ui->joystick_down->currentText().toStdString() + '/';
+    }
+    return str;
+}
+
+void MainWindow::on_apply_clicked()
+{
+    std::string str = get_combo(true);
     gamepad.apply(str);
     gamepad.send();
+    writesettings();
 }
 
 
@@ -231,4 +256,86 @@ void MainWindow::on_joystic_mode_currentIndexChanged(const QString &arg1)
         ui->joystick_right->setDisabled(true);
         ui->joystick_down->setDisabled(true);
     }
+}
+
+void MainWindow::saveFile(bool isSaveAs){
+    if(isSaveAs || currentFileName.isEmpty()){
+        QString fileName = QFileDialog::getSaveFileName();
+        if(fileName.isEmpty()) return;
+        currentFileName = fileName;
+
+    }
+    QFile file(currentFileName);
+    if(!file.open(QIODevice::WriteOnly | QIODevice::Text))
+        return;
+    QTextStream textStream(&file);
+    textStream << QString::fromUtf8(get_combo(false).data());
+    file.close();
+}
+
+void MainWindow::on_actionOpen_triggered()
+{
+    QString fileName = QFileDialog::getOpenFileName();
+    if(fileName.isEmpty()) return;
+
+    currentFileName=fileName;
+    QFile file(fileName);
+    if(!file.open(QIODevice::ReadOnly | QIODevice::Text))
+        return;
+    QTextStream textStream(&file);
+    QString text = textStream.readAll();
+    QStringList list1 = text.split('/');
+    if(list1[0] == "arduinocontroller"){
+    ui->button_analogic->setCurrentText(list1[1]);
+    ui->button_up->setCurrentText(list1[2]);
+    ui->button_left->setCurrentText(list1[3]);
+    ui->button_right->setCurrentText(list1[4]);
+    ui->button_down->setCurrentText(list1[5]);
+    ui->joystic_mode->setCurrentText(list1[6]);
+    ui->joystick_up->setCurrentText(list1[7]);
+    ui->joystick_left->setCurrentText(list1[8]);
+    ui->joystick_right->setCurrentText(list1[9]);
+    ui->joystick_down->setCurrentText(list1[10]);
+    }else{
+        ui->statusbar->showMessage("invalid file", 2000);
+    }
+    file.close();
+}
+
+void MainWindow::on_actionSave_triggered()
+{
+   saveFile();
+}
+
+void MainWindow::on_actionSave_as_triggered()
+{
+   saveFile(true);
+}
+
+void MainWindow::writesettings(){
+   QSettings sett;
+   sett.setValue("b_joy", ui->button_analogic->currentText());
+   sett.setValue("b_up", ui->button_up->currentText());
+   sett.setValue("b_left", ui->button_left->currentText());
+   sett.setValue("b_right", ui->button_right->currentText());
+   sett.setValue("b_down", ui->button_down->currentText());
+   sett.setValue("joy_mode", ui->joystic_mode->currentText());
+   sett.setValue("joy_up", ui->joystick_up->currentText());
+   sett.setValue("joy_left", ui->joystick_left->currentText());
+   sett.setValue("joy_right", ui->joystick_right->currentText());
+   sett.setValue("joy_down", ui->joystick_down->currentText());
+}
+
+void MainWindow::readsettings(){
+    QSettings sett;
+    ui->button_analogic->setCurrentText(sett.value("b_joy", 'a').toString());
+    ui->button_up->setCurrentText(sett.value("b_up", 'a').toString());
+    ui->button_left->setCurrentText(sett.value("b_left", 'a').toString());
+    ui->button_right->setCurrentText(sett.value("b_right", 'a').toString());
+    ui->button_down->setCurrentText(sett.value("b_down", 'a').toString());
+    ui->joystic_mode->setCurrentText(sett.value("joy_mode", 'mouse movement').toString());
+    ui->joystick_up->setCurrentText(sett.value("joy_up", 'a').toString());
+    ui->joystick_left->setCurrentText(sett.value("joy_left", 'a').toString());
+    ui->joystick_right->setCurrentText(sett.value("joy_right", 'a').toString());
+    ui->joystick_down->setCurrentText(sett.value("joy_down", 'a').toString());
 }
