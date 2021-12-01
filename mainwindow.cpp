@@ -5,6 +5,9 @@
 #include <QFileDialog>
 #include <QFile>
 #include <QSettings>
+#include <QCoreApplication>
+#include <QMessageBox>
+#include <QCloseEvent>
 
 QStringList MainWindow::combooptions(){
 
@@ -50,6 +53,10 @@ MainWindow::MainWindow(QWidget *parent)
     ui->joystick_down->addItems(combooptions());
     readsettings();
     on_joystic_mode_currentIndexChanged(ui->joystic_mode->currentText());
+    createActions();
+    createTrayIcon();
+    setIcon();
+    trayIcon->show();
 }
 
 MainWindow::~MainWindow()
@@ -333,9 +340,59 @@ void MainWindow::readsettings(){
     ui->button_left->setCurrentText(sett.value("b_left", 'a').toString());
     ui->button_right->setCurrentText(sett.value("b_right", 'a').toString());
     ui->button_down->setCurrentText(sett.value("b_down", 'a').toString());
-    ui->joystic_mode->setCurrentText(sett.value("joy_mode", 'mouse movement').toString());
+    ui->joystic_mode->setCurrentText(sett.value("joy_mode", "mouse movement").toString());
     ui->joystick_up->setCurrentText(sett.value("joy_up", 'a').toString());
     ui->joystick_left->setCurrentText(sett.value("joy_left", 'a').toString());
     ui->joystick_right->setCurrentText(sett.value("joy_right", 'a').toString());
     ui->joystick_down->setCurrentText(sett.value("joy_down", 'a').toString());
+}
+
+void MainWindow::closeEvent(QCloseEvent *event)
+{
+    if (trayIcon->isVisible()) {
+        QMessageBox::information(this, tr("Systray"),
+                                 tr("The program will keep running in the "
+                                    "system tray. To terminate the program, "
+                                    "choose <b>Quit</b> in the context menu "
+                                    "of the system tray entry."));
+        hide();
+        event->ignore();
+    }
+}
+
+void MainWindow::createActions()
+{
+    minimizeAction = new QAction(tr("Mi&nimize"), this);
+    connect(minimizeAction, &QAction::triggered, this, &QWidget::hide);
+
+    maximizeAction = new QAction(tr("Ma&ximize"), this);
+    connect(maximizeAction, &QAction::triggered, this, &QWidget::showMaximized);
+
+    restoreAction = new QAction(tr("&Restore"), this);
+    connect(restoreAction, &QAction::triggered, this, &QWidget::showNormal);
+
+    quitAction = new QAction(tr("&Quit"), this);
+    connect(quitAction, &QAction::triggered, qApp, &QCoreApplication::quit);
+}
+
+void MainWindow::createTrayIcon()
+{
+    trayIconMenu = new QMenu(this);
+    trayIconMenu->addAction(minimizeAction);
+    trayIconMenu->addAction(maximizeAction);
+    trayIconMenu->addAction(restoreAction);
+    trayIconMenu->addSeparator();
+    trayIconMenu->addAction(quitAction);
+
+    trayIcon = new QSystemTrayIcon(this);
+    trayIcon->setContextMenu(trayIconMenu);
+}
+
+void MainWindow::setIcon()
+{
+    QIcon icon = QIcon(":/images/icon.jpg");
+    trayIcon->setIcon(icon);
+    setWindowIcon(icon);
+
+    trayIcon->setToolTip("arduino gamepad");
 }
