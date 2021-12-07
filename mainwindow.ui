@@ -137,6 +137,11 @@
           <string>Xinput right joystick</string>
          </property>
         </item>
+        <item>
+         <property name="text">
+          <string>directinput joystick</string>
+         </property>
+        </item>
        </widget>
       </item>
       <item row="3" column="4">

@@ -32,7 +32,10 @@ return QStringList() << "a" << "b" << "c" << "d" << "e"
                      << "Xinput d-pad up" << "Xinput d-pad left" << "Xinput d-pad right" << "Xinput d-pad down"
                      << "Xinput back" << "Xinput logo" << "Xinput start" << "Xinput l3" << "Xinput r3"
                      << "Xinput left joystick up" << "Xinput left joystick left" << "Xinput left joystick right" << "Xinput left joystick down"
-                     << "Xinput right joystick up" << "Xinput right joystick left" << "Xinput right joystick right" << "Xinput right joystick down";
+                     << "Xinput right joystick up" << "Xinput right joystick left" << "Xinput right joystick right" << "Xinput right joystick down"
+                     << "directinput button 1" << "directinput button 2" << "directinput button 3" << "directinput button 4" << "directinput button 5"
+                     << "directinput button 6" << "directinput button 7" << "directinput button 8" << "directinput button 9"
+                     << "directinput joystick up" << "directinput joystick left" << "directinput joystick right" << "directinput joystick down";
 }
 
 MainWindow::MainWindow(QWidget *parent)
@@ -81,6 +84,8 @@ char MainWindow::formatbuttons(QString button){
         return 220;
     if (str == "Xinput right joystick")
         return 221;
+    if (str == "directinput joystick")
+        return 249;
     if (str == "Xinput l3")
         return 222;
     if (str == "Xinput r3")
@@ -207,6 +212,32 @@ char MainWindow::formatbuttons(QString button){
         return 204;
     if (str == "F12")
         return 205;
+    if (str == "directinput button 1")
+        return 240;
+    if (str == "directinput button 2")
+        return 241;
+    if (str == "directinput button 3")
+        return 242;
+    if (str == "directinput button 4")
+        return 243;
+    if (str == "directinput button 5")
+        return 244;
+    if (str == "directinput button 6")
+        return 245;
+    if (str == "directinput button 7")
+        return 246;
+    if (str == "directinput button 8")
+        return 247;
+    if (str == "directinput button 9")
+        return 248;
+    if (str == "directinput joystick up")
+        return 21;
+    if (str == "directinput joystick left")
+        return 22;
+    if (str == "directinput joystick right")
+        return 23;
+    if (str == "directinput joystick down")
+        return 24;
     if (str == "space")
         return 32;
     return str[0];

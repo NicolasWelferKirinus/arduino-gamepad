@@ -1,3 +1,4 @@
+#include <Joystick.h>
 #include <Esplora.h>
 #include <Mouse.h>
 #include <Keyboard.h>
@@ -12,9 +13,12 @@ void setup()
   Mouse.begin();            
   Keyboard.begin();
   XInput.begin();
+  Joystick_(0x03, 0x05, 9, 0, true, true, false, false, false, false, false, false, false, false, false);
 }
 
 void loop()
 {
-  gamepad.check();
+  gamepad.check_serial();
+  gamepad.check_buttons();
+  gamepad.check_joy();
 }
