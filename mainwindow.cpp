@@ -36,7 +36,9 @@ return QStringList() << "unused"
                      << "Xinput right joystick up" << "Xinput right joystick left" << "Xinput right joystick right" << "Xinput right joystick down"
                      << "directinput button 1" << "directinput button 2" << "directinput button 3" << "directinput button 4" << "directinput button 5"
                      << "directinput button 6" << "directinput button 7" << "directinput button 8" << "directinput button 9"
-                     << "directinput joystick up" << "directinput joystick left" << "directinput joystick right" << "directinput joystick down";
+                     << "directinput button 10" << "directinput button 11" << "directinput button 12" << "directinput button 13"
+                     << "directinput joystick 1 up" << "directinput joystick 1 left" << "directinput joystick 1 right" << "directinput joystick 1 down"
+                     << "directinput joystick 2 up" << "directinput joystick 2 left" << "directinput joystick 2 right" << "directinput joystick 2 down";
 }
 
 MainWindow::MainWindow(QWidget *parent)
@@ -55,8 +57,13 @@ MainWindow::MainWindow(QWidget *parent)
     ui->joystick_left->addItems(combooptions());
     ui->joystick_right->addItems(combooptions());
     ui->joystick_down->addItems(combooptions());
+    ui->gyro_up->addItems(combooptions());
+    ui->gyro_left->addItems(combooptions());
+    ui->gyro_right->addItems(combooptions());
+    ui->gyro_down->addItems(combooptions());
     readsettings();
     on_joystic_mode_currentIndexChanged(ui->joystic_mode->currentText());
+    on_gyro_mode_currentIndexChanged(ui->gyro_mode->currentText());
     createActions();
     createTrayIcon();
     setIcon();
@@ -83,8 +90,10 @@ char MainWindow::formatbuttons(QString button){
         return 220;
     if (str == "Xinput right joystick")
         return 221;
-    if (str == "directinput joystick")
+    if (str == "directinput joystick 1")
         return 249;
+    if (str == "directinput joystick 2")
+        return 37;
     if (str == "Xinput l3")
         return 222;
     if (str == "Xinput r3")
@@ -229,14 +238,30 @@ char MainWindow::formatbuttons(QString button){
         return 247;
     if (str == "directinput button 9")
         return 248;
-    if (str == "directinput joystick up")
+    if (str == "directinput button 10")
+        return 33;
+    if (str == "directinput button 11")
+        return 34;
+    if (str == "directinput button 12")
+        return 35;
+    if (str == "directinput button 13")
+        return 36;
+    if (str == "directinput joystick 1 up")
         return 21;
-    if (str == "directinput joystick left")
+    if (str == "directinput joystick 1 left")
         return 22;
-    if (str == "directinput joystick right")
+    if (str == "directinput joystick 1 right")
         return 23;
-    if (str == "directinput joystick down")
+    if (str == "directinput joystick 1 down")
         return 24;
+    if (str == "directinput joystick 2 up")
+        return 37;
+    if (str == "directinput joystick 2 left")
+        return 38;
+    if (str == "directinput joystick 2 right")
+        return 39;
+    if (str == "directinput joystick 2 down")
+        return 40;
     if (str == "space")
         return 32;
     return str[0];
@@ -255,7 +280,11 @@ std::string MainWindow::get_combo(bool serial){
     str += formatbuttons(ui->joystick_left->currentText());
     str += formatbuttons(ui->joystick_right->currentText());
     str += formatbuttons(ui->joystick_down->currentText());
-    str += formatbuttons(ui->gyro->currentText());
+    str += formatbuttons(ui->gyro_mode->currentText());
+    str += formatbuttons(ui->gyro_up->currentText());
+    str += formatbuttons(ui->gyro_left->currentText());
+    str += formatbuttons(ui->gyro_right->currentText());
+    str += formatbuttons(ui->gyro_down->currentText());
     }else{
         str += "arduinocontroller/";
         str += ui->button_analogic->currentText().toStdString() + '/';
@@ -268,7 +297,11 @@ std::string MainWindow::get_combo(bool serial){
         str += ui->joystick_left->currentText().toStdString() + '/';
         str += ui->joystick_right->currentText().toStdString() + '/';
         str += ui->joystick_down->currentText().toStdString() + '/';
-        str += ui->gyro->currentText().toStdString() + '/';
+        str += ui->gyro_mode->currentText().toStdString() + '/';
+        str += ui->gyro_up->currentText().toStdString() + '/';
+        str += ui->gyro_left->currentText().toStdString() + '/';
+        str += ui->gyro_right->currentText().toStdString() + '/';
+        str += ui->gyro_down->currentText().toStdString() + '/';
     }
     return str;
 }
@@ -335,6 +368,11 @@ void MainWindow::on_actionOpen_triggered()
     ui->joystick_left->setCurrentText(list1[8]);
     ui->joystick_right->setCurrentText(list1[9]);
     ui->joystick_down->setCurrentText(list1[10]);
+    ui->gyro_mode->setCurrentText(list1[11]);
+    ui->gyro_up->setCurrentText(list1[12]);
+    ui->gyro_left->setCurrentText(list1[13]);
+    ui->gyro_right->setCurrentText(list1[14]);
+    ui->gyro_down->setCurrentText(list1[15]);
     }else{
         ui->statusbar->showMessage("invalid file", 2000);
         currentFileName="";
@@ -364,6 +402,11 @@ void MainWindow::writesettings(){
    sett.setValue("joy_left", ui->joystick_left->currentText());
    sett.setValue("joy_right", ui->joystick_right->currentText());
    sett.setValue("joy_down", ui->joystick_down->currentText());
+   sett.setValue("gyro_mode", ui->gyro_mode->currentText());
+   sett.setValue("gyro_up", ui->gyro_up->currentText());
+   sett.setValue("gyro_left", ui->gyro_left->currentText());
+   sett.setValue("gyro_right", ui->gyro_right->currentText());
+   sett.setValue("gyro_down", ui->gyro_down->currentText());
 }
 
 void MainWindow::readsettings(){
@@ -378,6 +421,11 @@ void MainWindow::readsettings(){
     ui->joystick_left->setCurrentText(sett.value("joy_left", 'a').toString());
     ui->joystick_right->setCurrentText(sett.value("joy_right", 'a').toString());
     ui->joystick_down->setCurrentText(sett.value("joy_down", 'a').toString());
+    ui->gyro_mode->setCurrentText(sett.value("gyro_mode", "mouse movement").toString());
+    ui->gyro_up->setCurrentText(sett.value("gyro_up", 'a').toString());
+    ui->gyro_left->setCurrentText(sett.value("gyro_left", 'a').toString());
+    ui->gyro_right->setCurrentText(sett.value("gyro_right", 'a').toString());
+    ui->gyro_down->setCurrentText(sett.value("gyro_down", 'a').toString());
 }
 
 void MainWindow::closeEvent(QCloseEvent *event)
@@ -428,4 +476,19 @@ void MainWindow::setIcon()
     setWindowIcon(icon);
 
     trayIcon->setToolTip("arduino gamepad");
+}
+
+void MainWindow::on_gyro_mode_currentIndexChanged(const QString &arg1)
+{
+    if(arg1 == "buttons"){
+        ui->gyro_up->setDisabled(false);
+        ui->gyro_left->setDisabled(false);
+        ui->gyro_right->setDisabled(false);
+        ui->gyro_down->setDisabled(false);
+    }else{
+        ui->gyro_up->setDisabled(true);
+        ui->gyro_left->setDisabled(true);
+        ui->gyro_right->setDisabled(true);
+        ui->gyro_down->setDisabled(true);
+    }
 }

@@ -49,6 +49,8 @@ private slots:
 
     void setIcon();
 
+    void on_gyro_mode_currentIndexChanged(const QString &arg1);
+
 private:
     Ui::MainWindow *ui;
     Qtcontroller gamepad;

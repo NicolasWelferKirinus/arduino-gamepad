@@ -7,7 +7,7 @@
 #ifndef ARDUINOCONTROLLER_H
 #define ARDUINOCONTROLLER_H
 
-Joystick_ Joystick(0x03, 0x05, 9, 0, true, true, false, false, false, false, false, false, false, false, false);
+Joystick_ Joystick(0x03, 0x05, 13, 0, true, true, false, true, true, false, false, false, false, false, false);
 
 class Arduinocontroller
 {
@@ -18,7 +18,9 @@ private:
     int joy_button[5];
     int joy_value[2];
     int joy_comp[2];
-    int gyro[3];
+    int gyro[5];
+    int gyro_value[2];
+    int gyro_comp[2];
     
 public:
     Arduinocontroller(): button{0, 0, 0, 0, 0},
@@ -27,7 +29,9 @@ public:
         joy_button{0, 0, 0, 0, 0},
         joy_value{0, 0},
         joy_comp{0, 0},
-        gyro{0, 0, 0}
+        gyro{0, 0, 0, 0, 0},
+        gyro_value{0, 0},
+        gyro_comp{0, 0}
     {
       Serial.begin(9600);      
       Mouse.begin();            
@@ -37,6 +41,8 @@ public:
       Joystick.begin(true);
       Joystick.setXAxis(511);
       Joystick.setYAxis(511);
+      Joystick.setRxAxis(511);
+      Joystick.setRyAxis(511);
     }
 
     void button_press(int button_value){
@@ -120,7 +126,7 @@ public:
             XInput.press(BUTTON_R3);
             break;
         case 224:
-            XInput.setJoystickX(JOY_LEFT, 1023);
+            XInput.setJoystickX(JOY_LEFT, 0);
             break;
         case 225:
             XInput.setJoystickY(JOY_LEFT, 0);
@@ -129,10 +135,10 @@ public:
             XInput.setJoystickY(JOY_LEFT, 1023);
             break;
         case 227:
-            XInput.setJoystickX(JOY_LEFT, 0);
+            XInput.setJoystickX(JOY_LEFT, 1023);
             break;
         case 228:
-            XInput.setJoystickX(JOY_RIGHT, 1023);
+            XInput.setJoystickX(JOY_RIGHT, 0);
             break;
         case 229:
             XInput.setJoystickY(JOY_RIGHT, 0);
@@ -141,7 +147,7 @@ public:
             XInput.setJoystickY(JOY_RIGHT, 1023);
             break;
         case 231:
-            XInput.setJoystickX(JOY_RIGHT, 0);
+            XInput.setJoystickX(JOY_RIGHT, 1023);
             break;
         case 240:
         case 241:
@@ -154,6 +160,12 @@ public:
         case 248:
             Joystick.setButton(button_value - 240, 1);
             break;
+        case 33:
+        case 34:
+        case 35:
+        case 36:
+            Joystick.setButton(button_value - 24, 1);
+            break;
         case 21:
             Joystick.setYAxis(0);
             break;
@@ -165,6 +177,18 @@ public:
             break;
         case 24:
             Joystick.setYAxis(1023);
+            break;
+        case 37:
+            Joystick.setRyAxis(0);
+            break;
+        case 38:
+            Joystick.setRxAxis(0);
+            break;
+        case 39:
+            Joystick.setRxAxis(1023);
+            break;
+        case 40:
+            Joystick.setRyAxis(1023);
             break;
         default:
             Keyboard.press(button_value);
@@ -269,6 +293,12 @@ public:
         case 248:
             Joystick.setButton(button_value - 240, 0);
             break;
+        case 33:
+        case 34:
+        case 35:
+        case 36:
+            Joystick.setButton(button_value - 24, 0);
+            break;
         case 21:
             Joystick.setYAxis(511);
             break;
@@ -280,6 +310,18 @@ public:
             break;
         case 24:
             Joystick.setYAxis(511);
+            break;
+        case 37:
+            Joystick.setRyAxis(511);
+            break;
+        case 38:
+            Joystick.setRxAxis(511);
+            break;
+        case 39:
+            Joystick.setRxAxis(511);
+            break;
+        case 40:
+            Joystick.setRyAxis(511);
             break;
         default:
             Keyboard.release(button_value);
@@ -338,6 +380,45 @@ public:
         }
     }
 
+    void gyro_action(int pressed, int num)
+    {
+
+        if(pressed >= 5){
+            if (num == 0) {
+                button_press(gyro[3]);
+                if(gyro[3] > 69 && gyro[3] < 74){
+                    gyro_comp[num] = 0;
+                }
+            } else {
+                button_press(gyro[4]);
+                if(gyro[4] > 69 && gyro[4] < 74){
+                    gyro_comp[num] = 0;
+                }
+            }
+        }else{
+            if(pressed <= -5){
+                if (num == 0) {
+                    button_press(gyro[2]);
+                    if(gyro[2] > 69 && gyro[2] < 74){
+                        gyro_comp[num] = 0;
+                    }
+                } else {
+                    button_press(gyro[1]);
+                    if(gyro[1] > 69 && gyro[1] < 74){
+                        gyro_comp[num] = 0;
+                    }
+                }
+            }else{
+                if (num == 0) {
+                    button_release(gyro[2]);
+                    button_release(gyro[3]);
+                } else {
+                    button_release(gyro[1]);
+                    button_release(gyro[4]);
+                }
+            }
+        }
+    }
 
 
 
@@ -345,7 +426,7 @@ public:
     void check_serial(){
         if (Serial.available()>0){
             int it = 0;
-            int str[11];
+            int str[15];
             while (Serial.available() > 0)
             {
                 str[it] = Serial.read();
@@ -357,7 +438,9 @@ public:
             for (int i = 0; i < 5; i++) {
                 joy_button[i] = str[i+5];
             }
-            gyro[0] = str[10];
+            for (int i = 0; i < 5; i++) {
+                gyro[i] = str[i+10];
+            }
         }
     }
 
@@ -391,12 +474,12 @@ public:
             break;
         case 220:
             joy_value[0] = map(joy_value[0], -512, 512, 1023, 0);
-            joy_value[1] = map(joy_value[1], -512, 512, 1023, 0);
+            joy_value[1] = map(joy_value[1], -512, 512, 0, 1023);
             XInput.setJoystick(JOY_LEFT, joy_value[0], joy_value[1]);
             break;
         case 221:
             joy_value[0] = map(joy_value[0], -512, 512, 1023, 0);
-            joy_value[1] = map(joy_value[1], -512, 512, 1023, 0);
+            joy_value[1] = map(joy_value[1], -512, 512, 0, 1023);
             XInput.setJoystick(JOY_RIGHT, joy_value[0], joy_value[1]);
             break;
         case 249:
@@ -404,6 +487,12 @@ public:
             joy_value[1] = map(joy_value[1], -512, 512, 0, 1023);
             Joystick.setXAxis(joy_value[0]);
             Joystick.setYAxis(joy_value[1]);
+            break;
+        case 37:
+            joy_value[0] = map(joy_value[0], -512, 512, 1023, 0);
+            joy_value[1] = map(joy_value[1], -512, 512, 0, 1023);
+            Joystick.setRxAxis(joy_value[0]);
+            Joystick.setRyAxis(joy_value[1]);
             break;
         case 66:
             joy_value[0] = map(joy_value[0], -512, 512, 10, -10);
@@ -419,30 +508,46 @@ public:
     }
 
   void check_gyro(){
-    gyro[1] = Esplora.readAccelerometer(X_AXIS);
-    gyro[2] = Esplora.readAccelerometer(Y_AXIS);
+    gyro_value[0] = Esplora.readAccelerometer(X_AXIS);
+    gyro_value[1] = Esplora.readAccelerometer(Y_AXIS);
 
     switch(gyro[0]){
         case 65:
-            gyro[1] = map(gyro[1], -100, 100, 3, -3);
-            gyro[2] = map(gyro[2], -100, 100, -3, 3);
-            Mouse.move(gyro[1], gyro[2], 0);
+            gyro_value[0] = map(gyro_value[0], -100, 100, 3, -3);
+            gyro_value[1] = map(gyro_value[1], -100, 100, -3, 3);
+            Mouse.move(gyro_value[0], gyro_value[1], 0);
             break;
         case 220:
-            gyro[1] = map(gyro[1], -100, 100, 1023, 0);
-            gyro[2] = map(gyro[2], -100, 100, 1023, 0);
-            XInput.setJoystick(JOY_LEFT, gyro[1], gyro[2]);
+            gyro_value[0] = map(gyro_value[0], -100, 100, 1023, 0);
+            gyro_value[1] = map(gyro_value[1], -100, 100, 0, 1023);
+            XInput.setJoystick(JOY_LEFT, gyro_value[0], gyro_value[1]);
             break;
         case 221:
-            gyro[1] = map(gyro[1], -100, 100, 1023, 0);
-            gyro[2] = map(gyro[2], -100, 10, 1023, 0);
-            XInput.setJoystick(JOY_RIGHT, gyro[1], gyro[2]);
+            gyro_value[0] = map(gyro_value[0], -100, 100, 1023, 0);
+            gyro_value[1] = map(gyro_value[1], -100, 10, 0, 1023);
+            XInput.setJoystick(JOY_RIGHT, gyro_value[0], gyro_value[1]);
             break;
         case 249:
-            gyro[1] = map(gyro[1], -100, 100, 1023, 0);
-            gyro[2] = map(gyro[2], -100, 100, 0, 1023);
-            Joystick.setXAxis(gyro[1]);
-            Joystick.setYAxis(gyro[2]);
+            gyro_value[0] = map(gyro_value[0], -100, 100, 1023, 0);
+            gyro_value[1] = map(gyro_value[1], -100, 100, 0, 1023);
+            Joystick.setXAxis(gyro_value[0]);
+            Joystick.setYAxis(gyro_value[1]);
+            break;
+        case 37:
+            gyro_value[0] = map(gyro_value[0], -100, 100, 1023, 0);
+            gyro_value[1] = map(gyro_value[1], -100, 100, 0, 1023);
+            Joystick.setRxAxis(gyro_value[0]);
+            Joystick.setRyAxis(gyro_value[1]);
+            break;
+        case 66:
+            gyro_value[0] = map(gyro_value[0], -100, 100, 10, -10);
+            gyro_value[1] = map(gyro_value[1], -100, 100, -10, 10);
+            for (int i = 0; i < 2; i++) {
+                if((gyro_value[i] >= 5 && gyro_comp[i] < 5) || (gyro_value[i] <= -5 && gyro_comp[i] > -5) || ((gyro_value[i] > -5 && gyro_value[i] < 5) && (gyro_comp[i] >= 5 || gyro_comp[i] <= -5))){
+                    gyro_comp[i] = gyro_value[i];
+                    gyro_action(gyro_value[i], i);
+                    }
+            }
             break;
     }
   }
