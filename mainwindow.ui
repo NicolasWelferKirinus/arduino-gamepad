@@ -119,6 +119,11 @@
        <widget class="QComboBox" name="joystic_mode">
         <item>
          <property name="text">
+          <string>unused</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
           <string>mouse movement</string>
          </property>
         </item>
@@ -228,6 +233,42 @@
         <property name="text">
          <string>Joystick mode:</string>
         </property>
+       </widget>
+      </item>
+      <item row="5" column="0">
+       <widget class="QLabel" name="label_11">
+        <property name="text">
+         <string>gyro:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="5" column="1">
+       <widget class="QComboBox" name="gyro">
+        <item>
+         <property name="text">
+          <string>unused</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>mouse movement</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Xinput left joystick</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Xinput right joystick</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>directinput joystick</string>
+         </property>
+        </item>
        </widget>
       </item>
      </layout>

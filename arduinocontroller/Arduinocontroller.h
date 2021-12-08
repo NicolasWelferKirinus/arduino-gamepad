@@ -18,6 +18,7 @@ private:
     int joy_button[5];
     int joy_value[2];
     int joy_comp[2];
+    int gyro[3];
     
 public:
     Arduinocontroller(): button{0, 0, 0, 0, 0},
@@ -25,8 +26,14 @@ public:
         comp{0, 0, 0, 0, 0},
         joy_button{0, 0, 0, 0, 0},
         joy_value{0, 0},
-        joy_comp{0, 0}
+        joy_comp{0, 0},
+        gyro{0, 0, 0}
     {
+      Serial.begin(9600);      
+      Mouse.begin();            
+      Keyboard.begin();
+      XInput.begin();
+      XInput.setJoystickRange(0, 1023);
       Joystick.begin(true);
       Joystick.setXAxis(511);
       Joystick.setYAxis(511);
@@ -113,36 +120,28 @@ public:
             XInput.press(BUTTON_R3);
             break;
         case 224:
-            XInput.setJoystick(JOY_LEFT, 0, 32767);
-            XInput.setJoystick(JOY_LEFT, 0, 0);
+            XInput.setJoystickX(JOY_LEFT, 1023);
             break;
         case 225:
-            XInput.setJoystick(JOY_LEFT, -32768, 0);
-            XInput.setJoystick(JOY_LEFT, 0, 0);
+            XInput.setJoystickY(JOY_LEFT, 0);
             break;
         case 226:
-            XInput.setJoystick(JOY_LEFT, 32767, 0);
-            XInput.setJoystick(JOY_LEFT, 0, 0);
+            XInput.setJoystickY(JOY_LEFT, 1023);
             break;
         case 227:
-            XInput.setJoystick(JOY_LEFT, 0, -32768);
-            XInput.setJoystick(JOY_LEFT, 0, 0);
+            XInput.setJoystickX(JOY_LEFT, 0);
             break;
         case 228:
-            XInput.setJoystick(JOY_RIGHT, 0, 32767);
-            XInput.setJoystick(JOY_RIGHT, 0, 0);
+            XInput.setJoystickX(JOY_RIGHT, 1023);
             break;
         case 229:
-            XInput.setJoystick(JOY_RIGHT, -32768, 0);
-            XInput.setJoystick(JOY_RIGHT, 0, 0);
+            XInput.setJoystickY(JOY_RIGHT, 0);
             break;
         case 230:
-            XInput.setJoystick(JOY_RIGHT, 32767, 0);
-            XInput.setJoystick(JOY_RIGHT, 0, 0);
+            XInput.setJoystickY(JOY_RIGHT, 1023);
             break;
         case 231:
-            XInput.setJoystick(JOY_RIGHT, 0, -32768);
-            XInput.setJoystick(JOY_RIGHT, 0, 0);
+            XInput.setJoystickX(JOY_RIGHT, 0);
             break;
         case 240:
         case 241:
@@ -235,6 +234,30 @@ public:
         case 223:
             XInput.release(BUTTON_R3);
             break;
+        case 224:
+            XInput.setJoystickX(JOY_LEFT, 512);
+            break;
+        case 225:
+            XInput.setJoystickY(JOY_LEFT, 512);
+            break;
+        case 226:
+            XInput.setJoystickY(JOY_LEFT, 512);
+            break;
+        case 227:
+            XInput.setJoystickX(JOY_LEFT, 512);
+            break;
+        case 228:
+            XInput.setJoystickX(JOY_RIGHT, 512);
+            break;
+        case 229:
+            XInput.setJoystickY(JOY_RIGHT, 512);
+            break;
+        case 230:
+            XInput.setJoystickY(JOY_RIGHT, 512);
+            break;
+        case 231:
+            XInput.setJoystickX(JOY_RIGHT, 511);
+            break;
         case 240:
         case 241:
         case 242:
@@ -281,12 +304,12 @@ public:
         if(pressed >= 5){
             if (num == 0) {
                 button_press(joy_button[3]);
-                if((joy_button[3] > 69 && joy_button[3] < 74) || (joy_button[3] > 223 && joy_button[3] < 232)){
+                if(joy_button[3] > 69 && joy_button[3] < 74){
                     joy_comp[num] = 0;
                 }
             } else {
                 button_press(joy_button[4]);
-                if((joy_button[4] > 69 && joy_button[4] < 74) || (joy_button[4] > 223 && joy_button[4] < 232)){
+                if(joy_button[4] > 69 && joy_button[4] < 74){
                     joy_comp[num] = 0;
                 }
             }
@@ -294,12 +317,12 @@ public:
             if(pressed <= -5){
                 if (num == 0) {
                     button_press(joy_button[2]);
-                    if((joy_button[2] > 69 && joy_button[2] < 74) || (joy_button[2] > 223 && joy_button[2] < 232)){
+                    if(joy_button[2] > 69 && joy_button[2] < 74){
                         joy_comp[num] = 0;
                     }
                 } else {
                     button_press(joy_button[1]);
-                    if((joy_button[1] > 69 && joy_button[1] < 74) || (joy_button[1] > 223 && joy_button[1] < 232)){
+                    if(joy_button[1] > 69 && joy_button[1] < 74){
                         joy_comp[num] = 0;
                     }
                 }
@@ -322,7 +345,7 @@ public:
     void check_serial(){
         if (Serial.available()>0){
             int it = 0;
-            int str[10];
+            int str[11];
             while (Serial.available() > 0)
             {
                 str[it] = Serial.read();
@@ -334,6 +357,7 @@ public:
             for (int i = 0; i < 5; i++) {
                 joy_button[i] = str[i+5];
             }
+            gyro[0] = str[10];
         }
     }
 
@@ -345,7 +369,7 @@ public:
         pressed[4] = Esplora.readButton(SWITCH_DOWN);
 
         for (int i = 0; i < 5; i++) {
-            if ((button[i] > 69 && button[i] < 74) || (button[i] > 223 && button[i] < 232)){
+            if (button[i] > 69 && button[i] < 74){
                 button_action(pressed[i], button[i]);
             }else{
                 if(pressed[i] != comp[i]){
@@ -366,13 +390,13 @@ public:
             Mouse.move(joy_value[0], joy_value[1], 0);
             break;
         case 220:
-            joy_value[0] = map(joy_value[0], -512, 512, 32767, -32768);
-            joy_value[1] = map(joy_value[1], -512, 512, 32767, -32768);
+            joy_value[0] = map(joy_value[0], -512, 512, 1023, 0);
+            joy_value[1] = map(joy_value[1], -512, 512, 1023, 0);
             XInput.setJoystick(JOY_LEFT, joy_value[0], joy_value[1]);
             break;
         case 221:
-            joy_value[0] = map(joy_value[0], -512, 512, 32767, -32768);
-            joy_value[1] = map(joy_value[1], -512, 512, 32767, -32768);
+            joy_value[0] = map(joy_value[0], -512, 512, 1023, 0);
+            joy_value[1] = map(joy_value[1], -512, 512, 1023, 0);
             XInput.setJoystick(JOY_RIGHT, joy_value[0], joy_value[1]);
             break;
         case 249:
@@ -393,6 +417,35 @@ public:
             break;
         }
     }
+
+  void check_gyro(){
+    gyro[1] = Esplora.readAccelerometer(X_AXIS);
+    gyro[2] = Esplora.readAccelerometer(Y_AXIS);
+
+    switch(gyro[0]){
+        case 65:
+            gyro[1] = map(gyro[1], -100, 100, 3, -3);
+            gyro[2] = map(gyro[2], -100, 100, -3, 3);
+            Mouse.move(gyro[1], gyro[2], 0);
+            break;
+        case 220:
+            gyro[1] = map(gyro[1], -100, 100, 1023, 0);
+            gyro[2] = map(gyro[2], -100, 100, 1023, 0);
+            XInput.setJoystick(JOY_LEFT, gyro[1], gyro[2]);
+            break;
+        case 221:
+            gyro[1] = map(gyro[1], -100, 100, 1023, 0);
+            gyro[2] = map(gyro[2], -100, 10, 1023, 0);
+            XInput.setJoystick(JOY_RIGHT, gyro[1], gyro[2]);
+            break;
+        case 249:
+            gyro[1] = map(gyro[1], -100, 100, 1023, 0);
+            gyro[2] = map(gyro[2], -100, 100, 0, 1023);
+            Joystick.setXAxis(gyro[1]);
+            Joystick.setYAxis(gyro[2]);
+            break;
+    }
+  }
 
 };
 #endif // ARDUINOCONTROLLER_H

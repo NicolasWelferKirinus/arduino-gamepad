@@ -11,7 +11,8 @@
 
 QStringList MainWindow::combooptions(){
 
-return QStringList() << "a" << "b" << "c" << "d" << "e"
+return QStringList() << "unused"
+                     << "a" << "b" << "c" << "d" << "e"
                      << "f" << "g" << "h" << "i" << "j"
                      << "k" << "l" << "m" << "n" << "o"
                      << "p" << "q" << "r" << "s" << "t"
@@ -67,13 +68,11 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-constexpr unsigned int str2int(const char* str, int h = 0)
-{
-    return !str[h] ? 5381 : (str2int(str, h+1) * 33) ^ str[h];
-}
 
 char MainWindow::formatbuttons(QString button){
     std::string str =  button.toStdString();
+    if (str == "unused")
+        return 1;
     if (str == "enter")
         return 176;
     if (str == "mouse movement")
@@ -256,6 +255,7 @@ std::string MainWindow::get_combo(bool serial){
     str += formatbuttons(ui->joystick_left->currentText());
     str += formatbuttons(ui->joystick_right->currentText());
     str += formatbuttons(ui->joystick_down->currentText());
+    str += formatbuttons(ui->gyro->currentText());
     }else{
         str += "arduinocontroller/";
         str += ui->button_analogic->currentText().toStdString() + '/';
@@ -268,6 +268,7 @@ std::string MainWindow::get_combo(bool serial){
         str += ui->joystick_left->currentText().toStdString() + '/';
         str += ui->joystick_right->currentText().toStdString() + '/';
         str += ui->joystick_down->currentText().toStdString() + '/';
+        str += ui->gyro->currentText().toStdString() + '/';
     }
     return str;
 }
@@ -336,6 +337,7 @@ void MainWindow::on_actionOpen_triggered()
     ui->joystick_down->setCurrentText(list1[10]);
     }else{
         ui->statusbar->showMessage("invalid file", 2000);
+        currentFileName="";
     }
     file.close();
 }
